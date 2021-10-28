@@ -1,6 +1,6 @@
 {
   "name": "miniprogram-qrcode-clip",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "clip miniprogram qrcode center circle area at client side to your custom image!",
   "main": "libs/uni/index.js",
   "files": [

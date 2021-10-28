@@ -36,7 +36,8 @@ export default {
   },
   data () {
     return {
-      visible: false
+      visible: false,
+      inited: false
     }
   },
   props: {
@@ -62,7 +63,34 @@ export default {
     }
   },
   methods: {
+    init () {
+      return new Promise((resolve, reject) => {
+        uni
+          .createSelectorQuery()
+          .in(this)
+          .select('#canvas')
+          .fields({
+            node: true,
+            size: true
+          })
+          .exec((res) => {
+            if (res[0]) {
+              this.canvas = canvas = res[0].node
+              this.ctx = ctx = canvas.getContext('2d')
+              canvas.width = 430
+              canvas.height = 430
+              this.inited = true
+              resolve()
+            } else {
+              reject(new Error('can not find canvas node!'))
+            }
+          })
+      })
+    },
     async show () {
+      if (!this.inited) {
+        await this.init()
+      }
       await this.drawBg()
       if (this.avatarUrl) {
         await this.drawAvatar()
@@ -137,25 +165,9 @@ export default {
       return res.tempFilePath
     }
   },
-  mounted () {
+  async mounted () {
+    await this.init()
     // console.log('canvase mounted')
-    uni
-      .createSelectorQuery()
-      .in(this)
-      .select('#canvas')
-      .fields({
-        node: true,
-        size: true
-      })
-      .exec((res) => {
-        if (res[0]) {
-          this.canvas = canvas = res[0].node
-          this.ctx = ctx = canvas.getContext('2d')
-          // console.log(canvas, ctx)
-          canvas.width = 430
-          canvas.height = 430
-        }
-      })
   }
 }
 </script>
