@@ -60,6 +60,15 @@ export default {
     height: {
       type: Number,
       default: 300
+    },
+    // png 的情况下，背景是透明的，在裁剪覆盖不设置此项会变成2个logo叠加态
+    covered: {
+      type: Boolean,
+      default: true
+    },
+    coveredFillStyle: {
+      type: String,
+      default: '#ffffff'
     }
   },
   methods: {
@@ -117,14 +126,16 @@ export default {
           // start 把中间干掉!
           ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false)
           ctx.clip()
+
+          const x1 = offsetX - borderWidth
+          const y1 = offsetY - borderWidth
+          const realDiam = circle.radius * 2
+          if (this.covered) {
+            ctx.fillStyle = this.coveredFillStyle
+            ctx.fillRect(x1, y1, realDiam, realDiam)
+          }
           // end
-          ctx.drawImage(
-            img,
-            offsetX - borderWidth,
-            offsetY - borderWidth,
-            circle.radius * 2,
-            circle.radius * 2
-          )
+          ctx.drawImage(img, x1, y1, realDiam, realDiam)
           ctx.restore()
           resolve()
         }
