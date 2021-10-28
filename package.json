@@ -1,0 +1,39 @@
+{
+  "name": "miniprogram-qrcode-clip",
+  "version": "0.0.1",
+  "description": "clip miniprogram qrcode center circle area at client side to your custom image!",
+  "main": "libs/uni/index.js",
+  "files": [
+    "libs"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish:npm": "yarn publish --registry https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofmagic/miniprogram-qrcode-clip.git"
+  },
+  "keywords": [
+    "miniprogram",
+    "qrcode",
+    "clip"
+  ],
+  "author": "icebreaker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sonofmagic/miniprogram-qrcode-clip/issues"
+  },
+  "homepage": "https://github.com/sonofmagic/miniprogram-qrcode-clip#readme",
+  "devDependencies": {
+    "@dcloudio/types": "^2.5.12",
+    "eslint": "7.12.1",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-vue": "^7.20.0",
+    "mini-types": "^0.1.7",
+    "miniprogram-api-typings": "^3.4.3"
+  }
+}
