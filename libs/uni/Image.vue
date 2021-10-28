@@ -17,7 +17,7 @@
       width:width+'rpx',
       height:height+'rpx'
     }"
-      v-show="!visible"
+      v-show="loading || !visible"
       class="flex-center"
     >
       <Loading size="72"></Loading>
@@ -40,7 +40,7 @@ export default {
     }
   },
   props: {
-    show: {
+    loading: {
       type: Boolean,
       default: false
     },
@@ -61,31 +61,17 @@ export default {
       default: 300
     }
   },
-  watch: {
-    async show (newValue) {
-      if (newValue) {
-        await this.drawBg()
+  methods: {
+    async show () {
+      await this.drawBg()
+      if (this.avatarUrl) {
         await this.drawAvatar()
       }
-      this.visible = newValue
-    }
-  },
-  methods: {
-    set (k, v) {
-      this[k] = v
+      this.visible = true
     },
     async drawAvatar () {
-      const [err, res] = await uni.getImageInfo({
-        src: this.avatarUrl
-      })
-      if (err) {
-        throw err
-      }
-      // cloud:// 前缀的云存储url也可以哟
-      const { path } = res
-      console.log(res)
       const img = canvas.createImage()
-      img.src = path
+      img.src = this.avatarUrl
       const offsetX = 120
       const offsetY = 120
       const diam = 190
@@ -98,7 +84,7 @@ export default {
       }
       await new Promise((resolve, reject) => {
         img.onload = () => {
-          console.log(img)
+          // console.log(img)
           ctx.save()
           // start 把中间干掉!
           ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false)
@@ -120,15 +106,8 @@ export default {
       })
     },
     async drawBg () {
-      const [err, res] = await uni.getImageInfo({
-        src: this.src
-      })
-      if (err) {
-        throw err
-      }
-      const { path } = res
       const img = canvas.createImage()
-      img.src = path
+      img.src = this.src
       await new Promise((resolve, reject) => {
         img.onload = () => {
           ctx.drawImage(img, 0, 0, 430, 430)
@@ -138,7 +117,6 @@ export default {
           reject(event)
         }
       })
-      // const img = canvas.createImage()
     },
     async preview () {
       if (this.src) {
@@ -146,6 +124,7 @@ export default {
         uni.previewImage({
           urls: [src]
         })
+        return src
       }
     },
     async getImage () {
@@ -169,21 +148,13 @@ export default {
         size: true
       })
       .exec((res) => {
-        // （更换api后废弃） 强行设置 dpr 不然太慢 dpr 3.5 真机3800+ms，超过了3秒钟，自动 fallback
-        // console.log(res)
         if (res[0]) {
-          // const width = res[0].width
-          // const height = res[0].height
-
           this.canvas = canvas = res[0].node
           this.ctx = ctx = canvas.getContext('2d')
+          // console.log(canvas, ctx)
           canvas.width = 430
           canvas.height = 430
         }
-
-        // dpr = this.$store.getters.pixelRatio // this.dpr // this.$store.getters.pixelRatio
-        // canvas.width = width * dpr
-        // canvas.height = height * dpr
       })
   }
 }
